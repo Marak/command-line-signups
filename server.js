@@ -12,21 +12,32 @@ var splash = require('./lib/animations/jitsu');
 
 var nj = require('nodejitsu-api');
 
+
 var server = net.createServer(function (socket) {
 
   //
   // TODO: Add socket timeout if no data has come in
   //
-
+  socket.getEmail = false;
+  socket.getUsername = false;
   socket.email = '';
+  
   splash.handler(socket, function(err, charm){
+
+    socket.charm = charm;
+
+    var bufferingHackTimer;
+
+    socket.charm = charm;
+    bufferingHackTimer = setInterval(function(){
+      if (socket.writable) {
+        //socket.write(new Buffer([0]));
+      }
+    }, 50);
+
 
     socket.on('close', function(){
       charm.destroy();
-    });
-
-    socket.on('data', function(data){
-      parseInput(cleanInput(data.toString()), this, charm)
     });
 
     charm.foreground('blue');
@@ -34,24 +45,34 @@ var server = net.createServer(function (socket) {
     charm.foreground('white');
     charm.write('So you wish to learn Nodejitsu? \n\n');
     promptEmail(socket, charm);
+
+  socket.body = '';
+  
+  socket.on('data', function(data){
+    parseInput(cleanInput(data.toString()), this)
+  });
+
     
   });
 
 }).listen(23, '0.0.0.0');
 
 function promptEmail (socket, charm) {
-  socket.write('Enter your email address to enroll...');
+  charm.write('Enter your email address to enroll...');
   charm.foreground('red');
-  socket.write('\nemail> ');
+  charm.write('\nemail> ');
   charm.foreground('white');
+  socket.getEmail = true;
 }
 
 
 function promptUsername (socket, charm) {
   charm.write('\nEnter your desired username');
   charm.foreground('red');
-  socket.write('\nusername> ');
+  charm.write('\nusername> ');
   charm.foreground('white');
+  socket.getUsername = true;
+  
 }
 
 function cleanInput (data) {
@@ -66,7 +87,18 @@ function cleanInput (data) {
   return clean;
 }
 
-function parseInput (data, socket, charm) {
+function parseInput (data, socket) {
+
+
+  var charm = socket.charm;
+
+  //
+  // This is a hack for HTTP data from CURL...
+  // if anything we should detect the HTTP connection upstream and flag the socket
+  //
+  if(Number(data[0]) === data.length){
+    data = data.substr(1,clean.length-1);
+  }
 
   if(data === "exit" || data === "quit") {
     charm.destroy();
@@ -74,8 +106,9 @@ function parseInput (data, socket, charm) {
     return;
   }
 
-  if (socket.email.length) {
+  if (socket.email.length && socket.getUsername) {
 
+    socket.getUsername = false;
     //
     // Attempt to signup with desired user name
     //
@@ -90,6 +123,10 @@ function parseInput (data, socket, charm) {
       username: data,
       email: socket.email
     }, function (err, result){
+
+      if (!socket.writable) {
+        return false;
+      }
 
       if (err) {
         charm.write('\n');
@@ -126,20 +163,20 @@ function parseInput (data, socket, charm) {
     //
     // Capture email address
     //
-    //console.log(data);
 
     //
     // Prompt for username
     //
-    charm.write('Excellent! Now you will need to enter a unique username.\n');
+    socket.getEmail = false;
+    socket.charm.write('Excellent! Now you will need to enter a unique username.\n');
     promptUsername(socket, charm);
   }
-  
-  if (!socket.email.length) {
+
+  if (!socket.email.length && socket.getEmail) {
     charm.write('\n');
     charm.write('You have provided an invalid email address!!!\n\n');
     promptEmail(socket, charm);
   }
-
+ 
 
 }
