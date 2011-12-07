@@ -1,11 +1,18 @@
 var net = require('net');
 
-var splash = require('./lib/animations/jitsu');
-    
-var nj = require('nodejitsu-api');
- 
-var server = net.createServer(function (socket) {
+//
+// animations with charm tend to leak memory,
+// this require('kiwf') will restart the process at 200mbs of ram
+//
+require('kiwf')({
+  "maxMemory":200000000
+});
 
+var splash = require('./lib/animations/jitsu');
+
+var nj = require('nodejitsu-api');
+
+var server = net.createServer(function (socket) {
 
   //
   // TODO: Add socket timeout if no data has come in
@@ -30,11 +37,7 @@ var server = net.createServer(function (socket) {
     
   });
 
-
-  
-  
-}).listen(8888);
-
+}).listen(23, '0.0.0.0');
 
 function promptEmail (socket, charm) {
   socket.write('Enter your email address to enroll...');

@@ -1,0 +1,14 @@
+{
+  "name": "command-line-signups",
+  "subdomain": "command-line-signups",
+  "scripts": {
+    "start": "server.js"
+  },
+  "version": "0.0.0",
+  "dependencies": {
+    "kiwf": "*",
+    "nodejitsu-api": "*",
+    "charm": "*",
+    "kiwf": "*"
+  }
+}
