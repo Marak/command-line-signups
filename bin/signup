@@ -1,0 +1,43 @@
+var colors = require('colors');
+
+process.stdin.resume();
+process.stdin.setEncoding("utf8");
+
+var user = {};
+
+function cleanInput (data) {
+  var clean;
+
+  //
+  // Cleans the input of carriage return, newline
+  //
+  clean = data.toString().replace(/(\r\n|\n|\r)/gm,"");
+
+  return clean;
+}
+
+function read (prompt, cb) { 
+  process.stdout.write(prompt);
+  process.stdin.once('data', function(chunk) {
+    cb(cleanInput(chunk));
+  });
+}
+
+console.log('Welcome to '.white + 'Nodejitsu'.grey);
+console.log('So you wish to learn Nodejitsu? \n\n'.white);
+console.log('Enter your email address to enroll...'.white);
+
+read('email>'.red, function(email) { 
+  if (!email.length) {
+    process.stdout.write('\n');
+    process.stdout.write('You have provided an invalid email address!!!\n\n'.red.inverse);
+    promptEmail(socket, charm);
+  } else {
+    user.email = email;
+    console.log('Enter your desired username'.white);
+    read('username>'.red, function(username) {
+      user.username = username;
+      console.log(user);
+    });
+  }
+});
