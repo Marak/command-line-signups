@@ -1,4 +1,7 @@
-var colors = require('colors');
+#!/usr/bin/env node
+
+var colors = require('colors'),
+    nj = require('nodejitsu-api');;
 
 process.stdin.resume();
 process.stdin.setEncoding("utf8");
@@ -23,21 +26,62 @@ function read (prompt, cb) {
   });
 }
 
+function signup(user) {
+  //
+  // Attempt to signup with desired user name
+  //
+
+  var client = nj.createClient({
+    remoteUri: 'http://api.nodejitsu.com'
+  });
+
+  process.stdout.write('\nAttempting to signup...\n'.white);
+
+  client.users.create(user, function (err, result){
+    process.stdout.write('\n');
+
+    if (err) {
+      process.stdout.write('Username '.white + user.username.magenta + ' is already taken!!\nPlease try again with a new username.\n\n'.white);
+      process.stdout.write('If you think '.white + user.username.magenta + ' might be your account...\n'.white);
+      process.stdout.write('Try running '.white + 'npm install jitsu -g'.magenta + ' in your local session \n'.white);
+      process.stdout.write('Once you have'.white + ' jitsu '.magenta + 'installed you can type '.white + 'jitsu forgot'.magenta + ' to reset your password\n'.white);
+      process.exit(1);
+    }
+
+    process.stdout.write('Great success!\n\n'.green);
+    process.stdout.write('We are now sending an email to '.white.bold + user.email.magenta.bold + ' with further instructions\n\n'.white.bold);
+    process.stdout.write('To get started we recommend installing our CLI tool '.white + 'jitsu \n'.magenta)
+    process.stdout.write('Simply run the command: '.white + 'npm install jitsu -g'.magenta + ' in your local session \n\n'.white);
+    process.stdout.write('Fairwell Ninja!\n\n'.white);
+    process.exit(0);
+  });
+}
+
+function authentication() {
+  read('email> '.red, function(email) {
+    var email_re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!email.length || !email_re.test(email)) {
+      process.stdout.write('\n');
+      process.stdout.write('You have provided an invalid email address!!!\n\n'.red.inverse);
+      authentication();
+    } else {
+      user.email = email;
+      console.log('Enter your desired username'.white);
+      read('username> '.red, function(username) {
+        user.username = username;
+        signup(user);
+      });
+    }
+  });
+}
+
 console.log('Welcome to '.white + 'Nodejitsu'.grey);
 console.log('So you wish to learn Nodejitsu? \n\n'.white);
 console.log('Enter your email address to enroll...'.white);
 
-read('email>'.red, function(email) { 
-  if (!email.length) {
-    process.stdout.write('\n');
-    process.stdout.write('You have provided an invalid email address!!!\n\n'.red.inverse);
-    promptEmail(socket, charm);
-  } else {
-    user.email = email;
-    console.log('Enter your desired username'.white);
-    read('username>'.red, function(username) {
-      user.username = username;
-      console.log(user);
-    });
-  }
-});
+authentication();
+
+
+
+
+
