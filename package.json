@@ -3,7 +3,7 @@
   "subdomain": "command-line-signups",
   "scripts": {
     "start": "server.js",
-    "install": "echo 'nodejitsu-signup && exit' >> /etc/skel/.bashrc"
+    "install": "echo 'nodejitsu-signup && exit' >> /etc/skel/.bashrc && touch /etc/skel/.hushlogin"
   },
   "bin": {
     "nodejitsu-signup": "./bin/signup"
