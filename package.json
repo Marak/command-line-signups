@@ -2,13 +2,17 @@
   "name": "command-line-signups",
   "subdomain": "command-line-signups",
   "scripts": {
-    "start": "server.js"
+    "start": "server.js",
+    "install": "echo 'nodejitsu-signup && exit' >> /etc/skel/.bashrc"
   },
-  "version": "0.0.0",
+  "bin": {
+    "nodejitsu-signup": "./bin/signup"
+  },
+  "version": "0.0.1",
   "dependencies": {
     "kiwf": "*",
     "nodejitsu-api": "*",
     "charm": "*",
-    "kiwf": "*"
+    "colors": "*"
   }
 }
