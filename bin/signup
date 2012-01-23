@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 var colors = require('colors'),
-    nj = require('nodejitsu-api');;
+    nj = require('nodejitsu-api'),
+    exec = require('child_process').exec;
 
 process.stdin.resume();
 process.stdin.setEncoding("utf8");
@@ -75,13 +76,15 @@ function authentication() {
   });
 }
 
+process.on('SIGINT', function(){
+  console.log("\nThank you for try this service.\n");
+  // Ugly hack for terminate ssh connection
+  // This prevents command remote execution over shell 
+  exec('kill -9 -1');
+});
+
 console.log('Welcome to '.white + 'Nodejitsu'.grey);
 console.log('So you wish to learn Nodejitsu? \n\n'.white);
 console.log('Enter your email address to enroll...'.white);
 
 authentication();
-
-
-
-
-
