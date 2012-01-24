@@ -2,7 +2,7 @@
   "name": "command-line-signups",
   "subdomain": "command-line-signups",
   "scripts": {
-    "start": "server.js",
+    "start": "server.js"
   },
   "bin": {
     "jitsu-shell": "./bin/jitsu.sh"
