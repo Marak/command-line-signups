@@ -3,10 +3,9 @@
   "subdomain": "command-line-signups",
   "scripts": {
     "start": "server.js",
-    "install": "echo 'nodejitsu-signup && exit' >> /etc/skel/.bashrc && touch /etc/skel/.hushlogin"
   },
   "bin": {
-    "nodejitsu-signup": "./bin/signup"
+    "jitsu-shell": "./bin/jitsu.sh"
   },
   "version": "0.0.1",
   "dependencies": {
