@@ -5,13 +5,15 @@
     "start": "server.js"
   },
   "bin": {
-    "jitsu-shell": "./bin/jitsu.sh"
+    "jitsu-shell": "./bin/jitsu.sh",
+    "jitsu-help": "./bin/jitsu-help.sh"
   },
   "version": "0.0.1",
   "dependencies": {
     "kiwf": "*",
     "nodejitsu-api": "*",
     "charm": "*",
-    "colors": "*"
+    "colors": "*",
+    "winston": "*"
   }
 }

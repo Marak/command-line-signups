@@ -21,7 +21,7 @@ echo "{
 }" > $NEW_HOME/jitsuconf
 jitsu $ARGS login
 if [ $? -eq 0 ]; then
-  jitsu $ARGS help 
+  jitsu-help
   read -p "jitsu> " -e command
   while [[ "$command" != "q" && "$command" != "exit" && "$command" != "quit" ]]
   do
@@ -31,7 +31,7 @@ if [ $? -eq 0 ]; then
       else
         if [[ "$command" = "help" || "$command" = "h" ]]
           then
-            jitsu $ARGS help
+            jitsu-help
           else
             /bin/echo "Invalid command '$command': please use only jitsu commands"
         fi
