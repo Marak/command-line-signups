@@ -27,13 +27,19 @@ if [ $? -eq 0 ]; then
   do
     if [ "${command:0:5}" = "jitsu" ]
       then
-        jitsu $ARGS ${command:6}
+        # Checks for invalid commands over SSH session
+        if [[ "${command:6:6}" = "deploy" || "${command:6:7}" = "install" || "${command:6:4}" = "conf" || "${command:6:6}" = "config" ]]
+          then
+            echo "Sorry, you can't do that over a SSH session.'"
+          else
+            jitsu $ARGS ${command:6}
+        fi
       else
         if [[ "$command" = "help" || "$command" = "h" ]]
           then
             jitsu-help
           else
-            /bin/echo "Invalid command '$command': please use only jitsu commands"
+            echo "Invalid command '$command': please use only jitsu commands"
         fi
     fi
     read -p "jitsu> " -e command
