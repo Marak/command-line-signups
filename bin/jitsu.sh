@@ -28,7 +28,7 @@ if [ $? -eq 0 ]; then
     if [ "${command:0:5}" = "jitsu" ]
       then
         # Checks for invalid commands over SSH session
-        if [[ "${command:6:6}" = "deploy" || "${command:6:7}" = "install" || "${command:6:4}" = "conf" || "${command:6:6}" = "config" ]]
+        if [[ "${command:6:6}" = "deploy" || "${command:6:7}" = "install" || "${command:6:4}" = "conf" || "${command:6:6}" = "config" || "${command:6:11}" = "apps deploy" ]]
           then
             echo "Sorry, you can't do that over a SSH session.'"
           else
